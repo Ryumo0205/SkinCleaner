@@ -18,7 +18,7 @@ skin_name = pm.ls(get_history, type="skinCluster")  # 取得skinCluster名稱
 print(skin_name)
 
 #得到受影響的vtx,並選擇vtx
-pm.skinCluster(skin_name[0], edit=True, selectInfluenceVerts="L_Arm")
+pm.skinCluster(skin_name[0], edit=True, selectInfluenceVerts="Chest")
 inf_vtx = pm.filterExpand(sm=31)
 print(inf_vtx)
 
@@ -69,16 +69,16 @@ def check_vtx(IQRscale):
     y_IQR = y_Q3 - y_Q1
     z_IQR = z_Q3 - z_Q1
     print("x_IQR:",x_IQR)
-    print("x_IQR:",y_IQR)
-    print("x_IQR:",z_IQR)
+    print("y_IQR:",y_IQR)
+    print("z_IQR:",z_IQR)
 
 
-    x_IQR_max = x_Q3 + (x_IQR) * IQRscale
-    x_IQR_min = x_Q1 - (x_IQR) * IQRscale
-    y_IQR_max = y_Q3 + (y_IQR) * IQRscale
-    y_IQR_min = y_Q1 - (y_IQR) * IQRscale
-    z_IQR_max = z_Q3 + (z_IQR) * IQRscale
-    z_IQR_min = z_Q1 - (z_IQR) * IQRscale
+    x_IQR_max = (x_Q3 + (x_IQR)) * IQRscale
+    x_IQR_min = (x_Q1 - (x_IQR)) * IQRscale
+    y_IQR_max = (y_Q3 + (y_IQR)) * IQRscale
+    y_IQR_min = (y_Q1 - (y_IQR)) * IQRscale 
+    z_IQR_max = (z_Q3 + (z_IQR)) * IQRscale
+    z_IQR_min = (z_Q1 - (z_IQR)) * IQRscale
 
     print("x_outliyer:",x_IQR_max,"|",x_IQR_min)
     print("y_outliyer:",y_IQR_max,"|",y_IQR_min)
@@ -92,12 +92,12 @@ def check_vtx(IQRscale):
             pass
     for p2 in vtx_pos_dict.items():
         if p2[1][1] > y_IQR_max or p2[1][1] < y_IQR_min :
-            y_fix_vtx.append(p1[0])
+            y_fix_vtx.append(p2[0])
         else:
             pass
     for p3 in vtx_pos_dict.items():
         if p3[1][2] > z_IQR_max or p3[1][2] < z_IQR_min :
-            z_fix_vtx.append(p1[0])
+            z_fix_vtx.append(p3[0])
         else:
             pass
     #合併xyz名單,刪除重複的vtx
