@@ -1,5 +1,4 @@
 import math
-
 import pymel.core as pm
 
 def quantile_exc(data, n):
@@ -15,12 +14,16 @@ def quantile_exc(data, n):
 selected_skin = pm.ls(sl=True)
 get_history = pm.listHistory(selected_skin, lv=0)  # 讀取歷史紀錄
 skin_name = pm.ls(get_history, type="skinCluster")  # 取得skinCluster名稱
-print(skin_name)
+###這裡要先取得所有骨架的list#####
+
+
+
 
 #得到受影響的vtx,並選擇vtx
-pm.skinCluster(skin_name[0], edit=True, selectInfluenceVerts="Chest")
+########這裡要改成迴圈填入骨架名稱########
+pm.skinCluster(skin_name[0], edit=True, selectInfluenceVerts="L_Arm")
 inf_vtx = pm.filterExpand(sm=31)
-print(inf_vtx)
+
 
 vtx_pos_dict = {}
 x_list = []
@@ -45,15 +48,22 @@ for i in inf_vtx:
 #-------------------------------------------------------------------------------#
 
 #先試著處裡x軸,套入四分位數公式
-print(len(vtx_pos_dict))
 
-def check_vtx(IQRscale):
-    if IQRscale < 1.0 or IQRscale > 2.0:
+def check_vtx(x_IQRscale,y_IQRscale,z_IQRscale):
+    if x_IQRscale < 1.0 or x_IQRscale > 2.0:
         pm.select(clear=True)
         return
+    if y_IQRscale < 1.0 or y_IQRscale > 2.0:
+        pm.select(clear=True)
+        return
+    if z_IQRscale < 1.0 or z_IQRscale > 2.0:
+        pm.select(clear=True)
+        return
+
     x_fix_vtx = []
     y_fix_vtx = []
     z_fix_vtx = []
+
     #動態生成變數,將四分位數放入各自xyz變數
     for q in range(3):
         q = q + 1
@@ -73,12 +83,12 @@ def check_vtx(IQRscale):
     print("z_IQR:",z_IQR)
 
 
-    x_IQR_max = (x_Q3 + (x_IQR)) * IQRscale
-    x_IQR_min = (x_Q1 - (x_IQR)) * IQRscale
-    y_IQR_max = (y_Q3 + (y_IQR)) * IQRscale
-    y_IQR_min = (y_Q1 - (y_IQR)) * IQRscale 
-    z_IQR_max = (z_Q3 + (z_IQR)) * IQRscale
-    z_IQR_min = (z_Q1 - (z_IQR)) * IQRscale
+    x_IQR_max = (x_Q3 + (x_IQR)) * x_IQRscale
+    x_IQR_min = (x_Q1 - (x_IQR)) * x_IQRscale
+    y_IQR_max = (y_Q3 + (y_IQR)) * y_IQRscale
+    y_IQR_min = (y_Q1 - (y_IQR)) * y_IQRscale
+    z_IQR_max = (z_Q3 + (z_IQR)) * z_IQRscale
+    z_IQR_min = (z_Q1 - (z_IQR)) * z_IQRscale
 
     print("x_outliyer:",x_IQR_max,"|",x_IQR_min)
     print("y_outliyer:",y_IQR_max,"|",y_IQR_min)
@@ -106,9 +116,11 @@ def check_vtx(IQRscale):
     return fix_vtx
 #-----------------------------------------------------------------------------------#
 
+#執行方法,得到有問題的vtx的list
 fixed_vtx = check_vtx(1.0)
-
 print(fixed_vtx)
+
+#選擇並顯示有問題的點
 if fixed_vtx ==  None:
     pm.warning("IQRscale must 1.0 ~ 2.0 .")
 else:
