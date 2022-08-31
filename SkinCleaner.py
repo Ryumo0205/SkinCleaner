@@ -135,19 +135,23 @@ def check_vtx(x_IQRscale,y_IQRscale,z_IQRscale,InfluencesName=str):
 #-----------------------------------------------------------------------------------#
 checked_vtx_list = []
 
+# 執行迴圈檢查所有的骨架
 for one_inf in inf_list:
+
+    #檢測第一次 該次檢測的影響沒有權重就沒有資料輸出,就加入None
     checked_data = check_vtx(1.0, 1.0, 1.0, one_inf)
     if checked_data == None :
         temp_list = [one_inf,None]
         checked_vtx_list.append(temp_list)
         continue
     else:
+        # 取得vtx編號跟列表長度
         fix_vtx = checked_data[0]
         data_len = checked_data[1]
-        print(len(fix_vtx) / float(data_len))
+        x_att , y_att ,z_att = 1.0, 1.0, 1.0
+        #print(len(fix_vtx) / float(data_len))
 
-        x_att , y_att ,z_att = 1.0, 1.0 ,1.0
-
+        # 用迴圈來檢查是否異常點過多,過多的話就放寬數值進下一次迴圈,直到異常點的數量是檢測點數量的1%以下
         while True:
             if data_len < 3 :   #####這邊有問題,不能用點來判斷會除不盡
                 temp_list = [one_inf,None]
@@ -168,12 +172,13 @@ for one_inf in inf_list:
                 print("smooth!")
             else:
                 break
+        # 如果沒有檢測出異常點就加入none
         if fix_vtx == [] :
             temp_list = [one_inf,None]
             checked_vtx_list.append(temp_list)
         else:
             globals()[one_inf+"_vtx_list"] = fix_vtx
-            temp_list = [one_inf,globals()[one_inf+"_vtx_list"]]
+            temp_list = [one_inf,globals()[one_inf + "_vtx_list"]]
             checked_vtx_list.append(temp_list)
 
 print("OK!")
