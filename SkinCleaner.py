@@ -6,10 +6,13 @@ selected_skin = pm.ls(sl=True)
 get_history = pm.listHistory(selected_skin, lv=0)
 skin_name = pm.ls(get_history, type="skinCluster")  
 inf_list = pm.skinCluster(skin_name, query=True, weightedInfluence=True)
-print(inf_list)
+
 
 
 def quantile_exc(data, n):
+    """
+    四分位數公式
+    """
     data.sort()
     position = (len(data))*n/4
     #print("pos",position)
@@ -19,17 +22,11 @@ def quantile_exc(data, n):
     return quartile
 
 
-
-
-#-------------------------------------------------------------------------------#
-
-#套入四分位數公式
-
 def check_vtx(x_IQRscale,y_IQRscale,z_IQRscale,InfluencesName=str):
     """
     使用迴圈填入參數,能一次遍歷所有骨架影響
     """
-    print("Go!")
+    print("Checking...",InfluencesName)
     if x_IQRscale < 1.0 or x_IQRscale > 10:
         pm.select(clear=True)
         return
@@ -126,65 +123,65 @@ def check_vtx(x_IQRscale,y_IQRscale,z_IQRscale,InfluencesName=str):
             pass
 
     #合併xyz名單,刪除重複的vtx,返回一個被檢測出有問題的vtx的list
-    print(x_fix_vtx)
-    print(y_fix_vtx)
-    print(z_fix_vtx)
     fix_vtx = set(x_fix_vtx + y_fix_vtx + z_fix_vtx)
     fix_vtx = list(fix_vtx)
     return fix_vtx , inf_vtx_len
+
 #-----------------------------------------------------------------------------------#
-checked_vtx_list = []
+def run():
+    """
+    執行迴圈檢查所有骨架
+    """
+    checked_vtx_list = []
+    # 執行迴圈檢查所有的骨架
+    for one_inf in inf_list:
 
-# 執行迴圈檢查所有的骨架
-for one_inf in inf_list:
-
-    #檢測第一次 該次檢測的影響沒有權重就沒有資料輸出,就加入None
-    checked_data = check_vtx(1.0, 1.0, 1.0, one_inf)
-    if checked_data == None :
-        temp_list = [one_inf,None]
-        checked_vtx_list.append(temp_list)
-        continue
-    else:
-        # 取得vtx編號跟列表長度
-        fix_vtx = checked_data[0]
-        data_len = checked_data[1]
-        x_att , y_att ,z_att = 1.0, 1.0, 1.0
-        #print(len(fix_vtx) / float(data_len))
-
-        # 用迴圈來檢查是否異常點過多,過多的話就放寬數值進下一次迴圈,直到異常點的數量是檢測點數量的1%以下
-        while True:
-            if data_len < 3 :   #####這邊有問題,不能用點來判斷會除不盡
-                temp_list = [one_inf,None]
-                checked_vtx_list.append(temp_list)
-                break
-            else:
-                pass
-            if len(fix_vtx) / float(data_len) > 0.01 :
-                x_att += 0.2
-                y_att += 0.2
-                z_att += 0.2
-                checked_data = check_vtx(x_att, y_att, z_att, one_inf)
-                fix_vtx = checked_data[0]
-                data_len = checked_data[1]
-                # print(len(fix_vtx))
-                # print(data_len)
-                print(len(fix_vtx) / float(data_len))
-                print("smooth!")
-            else:
-                break
-        # 如果沒有檢測出異常點就加入none
-        if fix_vtx == [] :
+        #檢測第一次 該次檢測的影響沒有權重就沒有資料輸出,就加入None
+        checked_data = check_vtx(1.0, 1.0, 1.0, one_inf)
+        if checked_data == None :
             temp_list = [one_inf,None]
             checked_vtx_list.append(temp_list)
+            continue
         else:
-            globals()[one_inf+"_vtx_list"] = fix_vtx
-            temp_list = [one_inf,globals()[one_inf + "_vtx_list"]]
-            checked_vtx_list.append(temp_list)
+            # 取得vtx編號跟列表長度
+            fix_vtx = checked_data[0]
+            data_len = checked_data[1]
+            x_att , y_att ,z_att = 1.0, 1.0, 1.0
+            #print(len(fix_vtx) / float(data_len))
 
-print("OK!")
-print(L_Arm_list)
+            # 用迴圈來檢查是否異常點過多,過多的話就放寬數值進下一次迴圈,直到異常點的數量是檢測點數量的1%以下,最多檢查五次
+            counter = 0
+            while counter < 5 :
+                print(counter)
+                counter += 1
+                if len(fix_vtx) / float(data_len) > 0.01 :
+                    x_att += 0.2
+                    y_att += 0.2
+                    z_att += 0.2
+                    checked_data = check_vtx(x_att, y_att, z_att, one_inf)
+                    fix_vtx = checked_data[0]
+                    data_len = checked_data[1]
+                    # print(len(fix_vtx))
+                    # print(data_len)
+                    print(len(fix_vtx) / float(data_len))
+                    print("smooth!")
+                else:
+                    break
+            # 如果沒有檢測出異常點就加入none
+            if fix_vtx == [] :
+                temp_list = [one_inf,None]
+                checked_vtx_list.append(temp_list)
+            else:
+                globals()[one_inf+"_vtx_list"] = fix_vtx
+                temp_list = [one_inf,globals()[one_inf + "_vtx_list"]]
+                checked_vtx_list.append(temp_list)
 
-for iq in checked_vtx_list:
+    print("all finished ! ")
+    return checked_vtx_list
+
+getlist = run()
+
+for iq in getlist:
     if iq[1] == None :
         pass
     else:
