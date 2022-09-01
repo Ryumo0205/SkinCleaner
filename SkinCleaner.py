@@ -1,6 +1,17 @@
 import math
 import pymel.core as pm
 
+# 定義UI
+ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
+print(ui_file_path)
+MainUI = pm.loadUI(uiFile=ui_file_path)
+
+x_scale_value = pm.floatScrollBar(MainUI + r"|x_scale_value", edit=True)
+y_scale_value = pm.floatField(MainUI + r"|y_scale_value", edit=True)
+z_scale_value = pm.floatField(MainUI + r"|z_scale_value", edit=True)
+x_filter_value = pm.floatField(MainUI + r"|x_filter_value", edit=True)
+y_filter_value = pm.floatField(MainUI + r"|y_filter_value", edit=True)
+z_filter_value = pm.floatField(MainUI + r"|z_filter_value", edit=True)
 
 selected_skin = pm.ls(sl=True)
 get_history = pm.listHistory(selected_skin, lv=0)
@@ -179,29 +190,13 @@ def run():
     print("all finished ! ")
     return checked_vtx_list
 
-getlist = run()
+# getlist = run()
 
-for iq in getlist:
-    if iq[1] == None :
-        pass
-    else:
-        print(iq)
-# checked_data = check_vtx(1.0, 1.0, 1.0, "L_Arm")
-# fix_vtx = checked_data[0]
-# data_len = checked_data[1]
-
-# print(len(fix_vtx))
-# print(data_len)
-# print(len(fix_vtx) / float(data_len))
-
-
-
-# 執行方法,得到有問題的vtx的list
-# for one_inf in inf_list:
-#     print(one_inf)
-#     checked_data = check_vtx(1.3,1.5,1.0,one_inf) 
-#     print(one_inf, checked_data)
-
+# for iq in getlist:
+#     if iq[1] == None :
+#         pass
+#     else:
+#         print(iq)
 
 
 
@@ -211,3 +206,6 @@ for iq in getlist:
 # else:
 #     pass
 #     pm.select(fix_vtx)
+
+
+pm.showWindow(MainUI)
