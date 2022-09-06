@@ -5,7 +5,7 @@ sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
 # import UI_fn
 # reload(UI_fn)   #py2寫法
-
+#註解保存版
 
 def getinfo():
     selected_skin = pm.ls(sl=True)
