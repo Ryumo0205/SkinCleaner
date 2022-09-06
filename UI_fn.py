@@ -1,5 +1,5 @@
 import pymel.core as pm
-
+import SkinCleaner
 
 ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
 print(ui_file_path)
@@ -19,6 +19,8 @@ z_scale_value = pm.textField(MainUI + r"|z_scale_value", edit=True, text=z_scale
 x_filter_value = pm.textField(MainUI + r"|x_filter_value", edit=True, text=x_filter_num)
 y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=y_filter_num)
 z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=z_filter_num)
+
+outliyer_list = pm.textScrollList(MainUI + r"|outliyer_list", edit=True)
 
 
 def x_scale_value_plus_cmd(ignoreInputs):
@@ -74,7 +76,6 @@ def y_scale_value_plus_cmd(ignoreInputs):
     else:
         print(y_scale_num)
         pm.textField(y_scale_value, edit=True, text=y_scale_num)
-
 
 def y_scale_value_minus_cmd(ignoreInputs):
     print("-0.1")
@@ -144,7 +145,6 @@ def x_filter_value_plus_cmd(ignoreInputs):
     else:
         print(x_filter_num)
         pm.textField(x_filter_value, edit=True, text=x_filter_num)
-
 
 def x_filter_value_minus_cmd(ignoreInputs):
     print("-0.1")
@@ -221,5 +221,11 @@ def z_filter_value_minus_cmd(ignoreInputs):
         print(z_filter_num)
         pm.textField(z_filter_value, edit=True, text=z_filter_num)
 
+def run_cmd(ignoreInputs):
+    print("Run ! ")
+    #SkinCleaner.run()
+    #pm.textScrollList(outliyer_list , edit=True, append="+1")
 
-pm.showWindow(MainUI)
+
+
+window = pm.showWindow(MainUI)

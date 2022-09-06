@@ -1,23 +1,18 @@
 import math
 import pymel.core as pm
+import sys
+sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
-# 定義UI
-ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
-print(ui_file_path)
-MainUI = pm.loadUI(uiFile=ui_file_path)
+# import UI_fn
+# reload(UI_fn)   #py2寫法
 
-x_scale_value = pm.floatScrollBar(MainUI + r"|x_scale_value", edit=True)
-y_scale_value = pm.floatField(MainUI + r"|y_scale_value", edit=True)
-z_scale_value = pm.floatField(MainUI + r"|z_scale_value", edit=True)
-x_filter_value = pm.floatField(MainUI + r"|x_filter_value", edit=True)
-y_filter_value = pm.floatField(MainUI + r"|y_filter_value", edit=True)
-z_filter_value = pm.floatField(MainUI + r"|z_filter_value", edit=True)
 
-selected_skin = pm.ls(sl=True)
-get_history = pm.listHistory(selected_skin, lv=0)
-skin_name = pm.ls(get_history, type="skinCluster")  
-inf_list = pm.skinCluster(skin_name, query=True, weightedInfluence=True)
-
+def getinfo():
+    selected_skin = pm.ls(sl=True)
+    get_history = pm.listHistory(selected_skin, lv=0)
+    skin_name = pm.ls(get_history, type="skinCluster")  
+    inf_list = pm.skinCluster(skin_name, query=True, weightedInfluence=True)
+    return skin_name, inf_list
 
 
 def quantile_exc(data, n):
@@ -37,6 +32,9 @@ def check_vtx(x_IQRscale,y_IQRscale,z_IQRscale,InfluencesName=str):
     """
     使用迴圈填入參數,能一次遍歷所有骨架影響
     """
+    data = getinfo()
+    skin_name = data[0]
+
     print("Checking...",InfluencesName)
     if x_IQRscale < 1.0 or x_IQRscale > 10:
         pm.select(clear=True)
@@ -143,6 +141,10 @@ def run():
     """
     執行迴圈檢查所有骨架
     """
+    #print("gogogo")
+    data = getinfo()
+    inf_list = data[1]
+
     checked_vtx_list = []
     # 執行迴圈檢查所有的骨架
     for one_inf in inf_list:
@@ -190,13 +192,13 @@ def run():
     print("all finished ! ")
     return checked_vtx_list
 
-# getlist = run()
+getlist = run()
 
-# for iq in getlist:
-#     if iq[1] == None :
-#         pass
-#     else:
-#         print(iq)
+for iq in getlist:
+    if iq[1] == None :
+        pass
+    else:
+        print(iq)
 
 
 
@@ -207,5 +209,4 @@ def run():
 #     pass
 #     pm.select(fix_vtx)
 
-
-pm.showWindow(MainUI)
+#pm.showWindow(UI_fn.MainUI)
