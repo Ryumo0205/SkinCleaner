@@ -1,10 +1,10 @@
+from signal import SIGINT
 import pymel.core as pm
-import SkinCleaner
+import main
 
 ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
 print(ui_file_path)
 MainUI = pm.loadUI(uiFile=ui_file_path)
-
 
 x_scale_num = 1.0
 y_scale_num = 1.0
@@ -20,8 +20,10 @@ x_filter_value = pm.textField(MainUI + r"|x_filter_value", edit=True, text=x_fil
 y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=y_filter_num)
 z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=z_filter_num)
 
-outliyer_list = pm.textScrollList(MainUI + r"|outliyer_list", edit=True)
+outliyer_list = pm.textScrollList(MainUI + r"|outliyer_list", edit=True, sc="get_list_selected()")
 
+def ui_import_test():
+    print("uiimporttest")
 
 def x_scale_value_plus_cmd(ignoreInputs):
     global x_scale_num
@@ -223,9 +225,35 @@ def z_filter_value_minus_cmd(ignoreInputs):
 
 def run_cmd(ignoreInputs):
     print("Run ! ")
-    #SkinCleaner.run()
-    #pm.textScrollList(outliyer_list , edit=True, append="+1")
+    ##################影響名稱放到字典裡就沒辦法索引幹############
+    global query_dict
+    query_dict = {}
 
+
+    getlist = main.run()
+    print(getlist)
+    for iq in getlist:
+        if iq[1] == None :
+            pass
+        else:
+            #print(iq[0])
+            pm.textScrollList(outliyer_list , edit=True, append=iq[0])
+            query_dict[iq[0]]=iq[1]
+    
+    
+
+
+def get_list_selected():
+    
+    get_name = pm.textScrollList(outliyer_list, q=True, si=True)
+    print(get_name)
+
+    for i in query_dict.items():
+        if get_name[0] == i[0] :
+            pm.select(i[1])
+            break
+        else:
+            pass
 
 
 window = pm.showWindow(MainUI)
