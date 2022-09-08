@@ -255,5 +255,5 @@ def get_list_selected():
         else:
             pass
 
-
-window = pm.showWindow(MainUI)
+if __name__ == "__main__":
+    window = pm.showWindow(MainUI)
