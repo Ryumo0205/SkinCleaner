@@ -1,4 +1,4 @@
-from signal import SIGINT
+
 import pymel.core as pm
 import main
 

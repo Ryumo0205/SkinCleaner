@@ -3,7 +3,7 @@ import pymel.core as pm
 import sys
 sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
-import UI_fn
+#import UI_fn
 # reload(UI_fn)   #py2
 #
 def testfn():
@@ -144,9 +144,9 @@ def run():
     
     """
     # get ui setting value
-    x_IQRscale = UI_fn.x_scale_num
-    y_IQRscale = UI_fn.y_scale_num
-    z_IQRscale = UI_fn.z_scale_num
+    x_IQRscale = 1.0
+    y_IQRscale = 1.0
+    z_IQRscale = 1.0
 
 
 
@@ -201,14 +201,13 @@ def run():
     print("all finished ! ")
     return checked_vtx_list
 
-# getlist = run()
-# print(getlist)
-# for iq in getlist:
-#     print(iq[0])
-#     if iq[1] == None :
-#         pass
-#     else:
-#         print(iq)
+getlist = run()
+for iq in getlist:
+    print(iq[0])
+    if iq[1] == None :
+        pass
+    else:
+        print(iq)
 
 
 
