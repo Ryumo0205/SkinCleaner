@@ -3,7 +3,7 @@ import pymel.core as pm
 import sys
 sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
-#import UI_fn
+import UI_fn
 # reload(UI_fn)   #py2
 #
 def testfn():
