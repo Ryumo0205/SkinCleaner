@@ -152,7 +152,7 @@
     <string>made by Ryumo</string>
    </property>
   </widget>
-  <widget class="QListWidget" name="list_widget">
+  <widget class="QListWidget" name="outliyer_list">
    <property name="geometry">
     <rect>
      <x>230</x>

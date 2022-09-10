@@ -1,28 +1,33 @@
+
+import sys
+sys.path.append(r'G:\file\Coding\MayaPy\SkinCleaner')
 import pymel.core as pm
 import main
+reload(main)
 
 ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
 print(ui_file_path)
 MainUI = pm.loadUI(uiFile=ui_file_path)
 
-x_scale_num = 1.0
-y_scale_num = 1.0
-z_scale_num = 1.0
-x_filter_num = 0.1
-y_filter_num = 0.1
-z_filter_num = 0.1
+# x_scale_num = 1.0
+# y_scale_num = 1.0
+# z_scale_num = 1.0
+# x_filter_num = 0.1
+# y_filter_num = 0.1
+# z_filter_num = 0.1
 
-x_scale_value = pm.textField(MainUI + r"|x_scale_value", edit=True, text=x_scale_num)
-y_scale_value = pm.textField(MainUI + r"|y_scale_value", edit=True, text=y_scale_num)
-z_scale_value = pm.textField(MainUI + r"|z_scale_value", edit=True, text=z_scale_num)
-x_filter_value = pm.textField(MainUI + r"|x_filter_value", edit=True, text=x_filter_num)
-y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=y_filter_num)
-z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=z_filter_num)
+x_scale_value = pm.textField(MainUI + r"|x_scale_value", edit=True, text=1.0)
+y_scale_value = pm.textField(MainUI + r"|y_scale_value", edit=True, text=1.0)
+z_scale_value = pm.textField(MainUI + r"|z_scale_value", edit=True, text=1.0)
+x_filter_value = pm.textField(MainUI + r"|x_filter_value", edit=True, text=0.1)
+y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=0.1)
+z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=0.1)
+
+
 
 outliyer_list = pm.textScrollList(MainUI + r"|outliyer_list", edit=True, sc="get_list_selected()")
 
-def ui_import_test():
-    print("uiimporttest")
+
 
 def x_scale_value_plus_cmd(ignoreInputs):
     global x_scale_num
@@ -224,12 +229,14 @@ def z_filter_value_minus_cmd(ignoreInputs):
 
 def run_cmd(ignoreInputs):
     print("Run ! ")
-    ##################影響名稱放到字典裡就沒辦法索引幹############
+    pm.textScrollList(outliyer_list,edit=True,removeAll=True)
     global query_dict
     query_dict = {}
 
-
-    getlist = main.run()
+    scale_value_list = [x_scale_value.getText(),y_scale_value.getText(),z_scale_value.getText()]
+    filter_value_list = [x_filter_value.getText(),y_filter_value.getText(),z_filter_value.getText()]
+    print("UI:",filter_value_list)
+    getlist = main.run(scale_value_list,filter_value_list)
     print(getlist)
     for iq in getlist:
         if iq[1] == None :
@@ -238,7 +245,7 @@ def run_cmd(ignoreInputs):
             #print(iq[0])
             pm.textScrollList(outliyer_list , edit=True, append=iq[0])
             query_dict[iq[0]]=iq[1]
-    
+    pm.select(clear=True)
     
 
 

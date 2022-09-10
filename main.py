@@ -4,8 +4,8 @@ import sys
 sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
 import UI_fn
-# reload(UI_fn)   #py2
-#
+
+
 def testfn():
     print("testfn")
 
@@ -139,17 +139,20 @@ def check_vtx(x_IQRscale,y_IQRscale,z_IQRscale,InfluencesName=str):
     return fix_vtx , inf_vtx_len
 
 #-----------------------------------------------------------------------------------#
-def run():
+def run(scale_value=list, filter_value=list):
     """
     
     """
-    # get ui setting value
-    x_IQRscale = 1.0
-    y_IQRscale = 1.0
-    z_IQRscale = 1.0
 
+    # from string to float
+    scale_list = scale_value
+    scale_list = map(float,scale_value)
 
+    filter_list = filter_value
+    filter_list = map(float,filter_value)
 
+    print("main:",scale_list)
+    print("main:",filter_list)
     #================================#
     data = getinfo()
     inf_list = data[1]
@@ -159,7 +162,7 @@ def run():
     for one_inf in inf_list:
 
         #
-        checked_data = check_vtx(x_IQRscale, y_IQRscale, z_IQRscale, one_inf)
+        checked_data = check_vtx(scale_list[0], scale_list[1], scale_list[2], one_inf)
         if checked_data == None :
             temp_list = [one_inf,None]
             checked_vtx_list.append(temp_list)
@@ -168,7 +171,7 @@ def run():
             # 
             fix_vtx = checked_data[0]
             data_len = checked_data[1]
-            x_att , y_att ,z_att = 1.0, 1.0, 1.0
+            x_att , y_att ,z_att = scale_list[0], scale_list[1], scale_list[2]
             #print(len(fix_vtx) / float(data_len))
 
             # 
@@ -177,9 +180,9 @@ def run():
                 print(counter)
                 counter += 1
                 if len(fix_vtx) / float(data_len) > 0.01 :
-                    x_att += 0.2
-                    y_att += 0.2
-                    z_att += 0.2
+                    x_att += filter_list[0]
+                    y_att += filter_list[1]
+                    z_att += filter_list[2]
                     checked_data = check_vtx(x_att, y_att, z_att, one_inf)
                     fix_vtx = checked_data[0]
                     data_len = checked_data[1]
@@ -201,13 +204,13 @@ def run():
     print("all finished ! ")
     return checked_vtx_list
 
-getlist = run()
-for iq in getlist:
-    print(iq[0])
-    if iq[1] == None :
-        pass
-    else:
-        print(iq)
+# getlist = run()
+# for iq in getlist:
+#     print(iq[0])
+#     if iq[1] == None :
+#         pass
+#     else:
+#         print(iq)
 
 
 
