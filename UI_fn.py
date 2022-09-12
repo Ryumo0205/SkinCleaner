@@ -1,32 +1,12 @@
-
+import os
 import sys
-sys.path.append(r'G:\file\Coding\MayaPy\SkinCleaner')
+sys.path.append(r'D:\file\Code\MayaCode\SkinCleaner')
 import pymel.core as pm
 import main
-reload(main)
+#reload(main)
 
 ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
 print(ui_file_path)
-MainUI = pm.loadUI(uiFile=ui_file_path)
-
-# x_scale_num = 1.0
-# y_scale_num = 1.0
-# z_scale_num = 1.0
-# x_filter_num = 0.1
-# y_filter_num = 0.1
-# z_filter_num = 0.1
-
-x_scale_value = pm.textField(MainUI + r"|x_scale_value", edit=True, text=1.0)
-y_scale_value = pm.textField(MainUI + r"|y_scale_value", edit=True, text=1.0)
-z_scale_value = pm.textField(MainUI + r"|z_scale_value", edit=True, text=1.0)
-x_filter_value = pm.textField(MainUI + r"|x_filter_value", edit=True, text=0.1)
-y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=0.1)
-z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=0.1)
-
-
-
-outliyer_list = pm.textScrollList(MainUI + r"|outliyer_list", edit=True, sc="get_list_selected()")
-
 
 
 def x_scale_value_plus_cmd(ignoreInputs):
@@ -229,13 +209,15 @@ def z_filter_value_minus_cmd(ignoreInputs):
 
 def run_cmd(ignoreInputs):
     print("Run ! ")
+    os.remove(r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
+    pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
+
     pm.textScrollList(outliyer_list,edit=True,removeAll=True)
     global query_dict
     query_dict = {}
 
     scale_value_list = [x_scale_value.getText(),y_scale_value.getText(),z_scale_value.getText()]
     filter_value_list = [x_filter_value.getText(),y_filter_value.getText(),z_filter_value.getText()]
-    print("UI:",filter_value_list)
     getlist = main.run(scale_value_list,filter_value_list)
     print(getlist)
     for iq in getlist:
@@ -245,6 +227,8 @@ def run_cmd(ignoreInputs):
             #print(iq[0])
             pm.textScrollList(outliyer_list , edit=True, append=iq[0])
             query_dict[iq[0]]=iq[1]
+    
+    pm.cmdFileOutput(closeAll=True)
     pm.select(clear=True)
     
 
@@ -253,13 +237,39 @@ def get_list_selected():
     
     get_name = pm.textScrollList(outliyer_list, q=True, si=True)
     print(get_name)
+    if pm.currentCtx() != "artAttrSkinContext" :
+        print("change to paint skin mode")
+        pm.Mel.eval("ArtPaintSkinWeightsTool;")
+    else:
+        pass
 
     for i in query_dict.items():
         if get_name[0] == i[0] :
+            pm.Mel.eval("setSmoothSkinInfluence %s ;artSkinRevealSelected artAttrSkinPaintCtx;" % (get_name[0]))
             pm.select(i[1])
             break
         else:
             pass
 
-if __name__ == "__main__":
-    window = pm.showWindow(MainUI)
+MainUI = pm.loadUI(uiFile=ui_file_path)
+
+x_scale_value = pm.textField(MainUI + r"|x_scale_value", edit=True, text=2.0)
+y_scale_value = pm.textField(MainUI + r"|y_scale_value", edit=True, text=2.0)
+z_scale_value = pm.textField(MainUI + r"|z_scale_value", edit=True, text=2.0)
+x_filter_value = pm.textField(MainUI + r"|x_filter_value", edit=True, text=0.2)
+y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=0.2)
+z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=0.2)
+
+outliyer_list = pm.textScrollList(MainUI + r"|outliyer_list", edit=True, sc="get_list_selected()")
+
+# try:
+#     pm.deleteUI(MainUI)
+# except:
+#     pass
+window = pm.showWindow(MainUI)
+
+
+
+
+# if __name__ == "__main__":
+#     window = pm.showWindow(MainUI)

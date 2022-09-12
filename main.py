@@ -3,11 +3,7 @@ import pymel.core as pm
 import sys
 sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
-import UI_fn
-
-
-def testfn():
-    print("testfn")
+#output = pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
 
 def getinfo():
     selected_skin = pm.ls(sl=True)
@@ -65,7 +61,7 @@ def check_vtx(x_IQRscale,y_IQRscale,z_IQRscale,InfluencesName=str):
         return
 
     inf_vtx_len = len(inf_vtx)
-    print("inf_vtx_len:",inf_vtx_len)
+    print("inf_vtx_len:",inf_vtx_len,)
 
 
     #
@@ -143,7 +139,7 @@ def run(scale_value=list, filter_value=list):
     """
     
     """
-
+    output = pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
     # from string to float
     scale_list = scale_value
     scale_list = map(float,scale_value)
@@ -201,8 +197,17 @@ def run(scale_value=list, filter_value=list):
                 temp_list = [one_inf,globals()[one_inf + "_vtx_list"]]
                 checked_vtx_list.append(temp_list)
 
+    pm.cmdFileOutput(closeAll=True)
     print("all finished ! ")
     return checked_vtx_list
+
+
+
+#pm.cmdFileOutput(closeAll=True)
+if __name__ == "__main__":
+    print("please use GUI")
+else:
+    pass
 
 # getlist = run()
 # for iq in getlist:
