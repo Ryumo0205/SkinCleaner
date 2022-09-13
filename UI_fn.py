@@ -1,14 +1,16 @@
+import time
 import os
 import sys
 sys.path.append(r'D:\file\Code\MayaCode\SkinCleaner')
 import pymel.core as pm
 import main
-#reload(main)
+reload(main)
 
 ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
 print(ui_file_path)
+log_path = r"D:\file\Code\MayaCode\SkinCleaner\log.txt"
 
-
+#--------Button Fn-----------#
 def x_scale_value_plus_cmd(ignoreInputs):
     global x_scale_num
     get_num = x_scale_value.getText()
@@ -207,29 +209,45 @@ def z_filter_value_minus_cmd(ignoreInputs):
         print(z_filter_num)
         pm.textField(z_filter_value, edit=True, text=z_filter_num)
 
+
+#--------MAIN PART------------#
 def run_cmd(ignoreInputs):
     print("Run ! ")
-    os.remove(r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
+    if os.path.isfile(log_path):
+        os.remove(log_path)
+    else:
+        pass
+    
     pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
-
     pm.textScrollList(outliyer_list,edit=True,removeAll=True)
+
     global query_dict
     query_dict = {}
-
     scale_value_list = [x_scale_value.getText(),y_scale_value.getText(),z_scale_value.getText()]
     filter_value_list = [x_filter_value.getText(),y_filter_value.getText(),z_filter_value.getText()]
-    getlist = main.run(scale_value_list,filter_value_list)
-    print(getlist)
-    for iq in getlist:
-        if iq[1] == None :
-            pass
-        else:
-            #print(iq[0])
-            pm.textScrollList(outliyer_list , edit=True, append=iq[0])
-            query_dict[iq[0]]=iq[1]
-    
-    pm.cmdFileOutput(closeAll=True)
-    pm.select(clear=True)
+
+    try:
+        # main
+        info = main.getinfo()
+        pm.scrollField(message_browser, edit=True,text=str(info[2]))
+        getlist = main.run(scale_value_list,filter_value_list)
+        print(getlist)
+
+        for iq in getlist:
+            if iq[1] == None :
+                pass
+            else:
+                pm.textScrollList(outliyer_list , edit=True, append=iq[0])
+                query_dict[iq[0]]=iq[1]
+        pm.text(state_label, edit=True,
+                label="State:Complete ! ", bgc=[0, 1, 0])
+        pm.cmdFileOutput(closeAll=True)
+        pm.select(clear=True)
+
+    except:
+        pm.warning("please select skin model.")
+        pm.cmdFileOutput(closeAll=True)
+        pm.select(clear=True)
     
 
 
@@ -246,11 +264,14 @@ def get_list_selected():
     for i in query_dict.items():
         if get_name[0] == i[0] :
             pm.Mel.eval("setSmoothSkinInfluence %s ;artSkinRevealSelected artAttrSkinPaintCtx;" % (get_name[0]))
+            #pm.scrollField(message_browser, edit=True,text=str(i[1]))
             pm.select(i[1])
             break
         else:
             pass
 
+
+#---------UI------------#
 MainUI = pm.loadUI(uiFile=ui_file_path)
 
 x_scale_value = pm.textField(MainUI + r"|x_scale_value", edit=True, text=2.0)
@@ -261,15 +282,17 @@ y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=0.2)
 z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=0.2)
 
 outliyer_list = pm.textScrollList(MainUI + r"|outliyer_list", edit=True, sc="get_list_selected()")
-
-# try:
-#     pm.deleteUI(MainUI)
-# except:
-#     pass
-window = pm.showWindow(MainUI)
+state_label = pm.text(MainUI + r"|state_label",edit=True)
+message_browser = pm.scrollField(MainUI + r"|textEdit", edit=True)
 
 
+# listening
+pm.scriptJob(ct=["SomethingSelected", "pm.text(state_label, edit=True, label='State:None', bgc=[0.27,0.27,0.27])"],
+             parent=MainUI, permanent=True, killWithScene=True)
 
 
-# if __name__ == "__main__":
-#     window = pm.showWindow(MainUI)
+if __name__ == "__main__":
+    window = pm.showWindow(MainUI)
+else:
+    pass
+

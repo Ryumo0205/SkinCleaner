@@ -3,6 +3,8 @@ import pymel.core as pm
 import sys
 sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
+
+
 #output = pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
 
 def getinfo():
@@ -10,7 +12,8 @@ def getinfo():
     get_history = pm.listHistory(selected_skin, lv=0)
     skin_name = pm.ls(get_history, type="skinCluster")  
     inf_list = pm.skinCluster(skin_name, query=True, weightedInfluence=True)
-    return skin_name, inf_list
+    print(selected_skin)
+    return skin_name, inf_list, selected_skin
 
 
 def quantile_exc(data, n):
@@ -139,7 +142,7 @@ def run(scale_value=list, filter_value=list):
     """
     
     """
-    output = pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
+    #output = pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
     # from string to float
     scale_list = scale_value
     scale_list = map(float,scale_value)
@@ -152,11 +155,10 @@ def run(scale_value=list, filter_value=list):
     #================================#
     data = getinfo()
     inf_list = data[1]
-
     checked_vtx_list = []
     # 
     for one_inf in inf_list:
-
+        
         #
         checked_data = check_vtx(scale_list[0], scale_list[1], scale_list[2], one_inf)
         if checked_data == None :
@@ -193,11 +195,12 @@ def run(scale_value=list, filter_value=list):
                 temp_list = [one_inf,None]
                 checked_vtx_list.append(temp_list)
             else:
-                globals()[one_inf+"_vtx_list"] = fix_vtx
+                globals()[one_inf + "_vtx_list"] = fix_vtx
                 temp_list = [one_inf,globals()[one_inf + "_vtx_list"]]
                 checked_vtx_list.append(temp_list)
+    
 
-    pm.cmdFileOutput(closeAll=True)
+    #pm.cmdFileOutput(closeAll=True)
     print("all finished ! ")
     return checked_vtx_list
 
