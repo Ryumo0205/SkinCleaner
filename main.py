@@ -4,9 +4,6 @@ import sys
 sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
 
 
-
-#output = pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
-
 def getinfo():
     selected_skin = pm.ls(sl=True)
     get_history = pm.listHistory(selected_skin, lv=0)
@@ -142,7 +139,7 @@ def run(scale_value=list, filter_value=list):
     """
     
     """
-    #output = pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
+    gMainProgressBar = pm.mel.eval('$tmp = $gMainProgressBar')
     # from string to float
     scale_list = scale_value
     scale_list = map(float,scale_value)
@@ -156,9 +153,21 @@ def run(scale_value=list, filter_value=list):
     data = getinfo()
     inf_list = data[1]
     checked_vtx_list = []
+    max_len = len(inf_list)
+    point = 0
+    
     # 
     for one_inf in inf_list:
-        
+        point = point + 1
+        progress_value = point / max_len * 100
+        print("laod%:",progress_value)
+        pm.progressBar( gMainProgressBar,
+				edit=True,
+				beginProgress=True,
+				isInterruptable=True,
+				status='loading...',
+                progress=point,
+				maxValue=max_len )
         #
         checked_data = check_vtx(scale_list[0], scale_list[1], scale_list[2], one_inf)
         if checked_data == None :
@@ -199,7 +208,7 @@ def run(scale_value=list, filter_value=list):
                 temp_list = [one_inf,globals()[one_inf + "_vtx_list"]]
                 checked_vtx_list.append(temp_list)
     
-
+    pm.progressBar(gMainProgressBar, edit=True, endProgress=True)
     #pm.cmdFileOutput(closeAll=True)
     print("all finished ! ")
     return checked_vtx_list

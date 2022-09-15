@@ -1,15 +1,17 @@
 import time
 import os
+import pymel.core as pm
 import sys
 sys.path.append(r'D:\file\Code\MayaCode\SkinCleaner')
-import pymel.core as pm
 import main
 reload(main)
+
 
 ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
 print(ui_file_path)
 log_path = r"D:\file\Code\MayaCode\SkinCleaner\log.txt"
 
+#print(__file__)
 #--------Button Fn-----------#
 def x_scale_value_plus_cmd(ignoreInputs):
     global x_scale_num
@@ -264,7 +266,6 @@ def get_list_selected():
     for i in query_dict.items():
         if get_name[0] == i[0] :
             pm.Mel.eval("setSmoothSkinInfluence %s ;artSkinRevealSelected artAttrSkinPaintCtx;" % (get_name[0]))
-            #pm.scrollField(message_browser, edit=True,text=str(i[1]))
             pm.select(i[1])
             break
         else:
