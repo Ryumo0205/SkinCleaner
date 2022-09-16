@@ -120,23 +120,7 @@
     <string>執行檢查</string>
    </property>
    <property name="+command" stdset="0">
-    <string notr="true"/>
-   </property>
-  </widget>
-  <widget class="QProgressBar" name="progress_bar">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>330</y>
-     <width>191</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="value">
-    <number>50</number>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <string notr="true">run_cmd</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_10">
@@ -159,16 +143,6 @@
      <y>60</y>
      <width>171</width>
      <height>541</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QTextBrowser" name="message_browser">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>400</y>
-     <width>191</width>
-     <height>201</height>
     </rect>
    </property>
   </widget>
@@ -544,6 +518,37 @@
    </property>
    <property name="+command" stdset="0">
     <string>z_filter_value_plus_cmd</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="state_label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>330</y>
+     <width>191</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>State:None</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>410</y>
+     <width>191</width>
+     <height>191</height>
+    </rect>
    </property>
   </widget>
  </widget>

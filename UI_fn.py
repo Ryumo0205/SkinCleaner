@@ -2,14 +2,15 @@ import time
 import os
 import pymel.core as pm
 import sys
-sys.path.append(r'D:\file\Code\MayaCode\SkinCleaner')
-import main
-reload(main)
 
+import SkinChecker.main
+reload(SkinChecker.main)
 
-ui_file_path = pm.internalVar(usd=True) + r"Test/SkinWeightChecker.ui"
-print(ui_file_path)
-log_path = r"D:\file\Code\MayaCode\SkinCleaner\log.txt"
+print(os.path.abspath(os.getcwd()))
+ui_file_path = pm.internalVar(usd=True) + r"SkinChecker/SkinChecker.ui"
+print("UI:",ui_file_path)
+log_path = pm.internalVar(usd=True) + r"SkinChecker/log.txt"
+print("log:",log_path)
 
 #print(__file__)
 #--------Button Fn-----------#
@@ -220,7 +221,7 @@ def run_cmd(ignoreInputs):
     else:
         pass
     
-    pm.cmdFileOutput(open=r"D:\file\Code\MayaCode\SkinCleaner\log.txt")
+    pm.cmdFileOutput(open=log_path)
     pm.textScrollList(outliyer_list,edit=True,removeAll=True)
 
     global query_dict
@@ -230,9 +231,9 @@ def run_cmd(ignoreInputs):
 
     try:
         # main
-        info = main.getinfo()
+        info = SkinChecker.main.getinfo()
         pm.scrollField(message_browser, edit=True,text=str(info[2]))
-        getlist = main.run(scale_value_list,filter_value_list)
+        getlist = SkinChecker.main.run(scale_value_list,filter_value_list)
         print(getlist)
 
         for iq in getlist:
@@ -255,11 +256,15 @@ def run_cmd(ignoreInputs):
 
 def get_list_selected():
     
+
     get_name = pm.textScrollList(outliyer_list, q=True, si=True)
     print(get_name)
     if pm.currentCtx() != "artAttrSkinContext" :
-        print("change to paint skin mode")
-        pm.Mel.eval("ArtPaintSkinWeightsTool;")
+        try:
+            print("change to paint skin mode")
+            pm.Mel.eval("ArtPaintSkinWeightsToolOptions;")
+        except:
+            pass
     else:
         pass
 

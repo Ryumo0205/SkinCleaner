@@ -1,7 +1,8 @@
 import math
 import pymel.core as pm
-import sys
-sys.path.append(r'D:/file/Code/MayaCode/SkinCleaner')
+
+
+
 
 
 def getinfo():
