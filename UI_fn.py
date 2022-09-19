@@ -12,8 +12,9 @@ log_path = pm.internalVar(usd=True) + r"SkinChecker/log.txt"
 print("log:", log_path)
 
 # print(__file__)
-#--------Button Fn-----------#
 
+
+#--------Button Fn-----------#
 
 def x_scale_value_plus_cmd(ignoreInputs):
     global x_scale_num
