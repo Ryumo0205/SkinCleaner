@@ -294,9 +294,9 @@ def get_list_selected():
 #---------UI------------#
 MainUI = pm.loadUI(uiFile=ui_file_path)
 
-x_scale_value = pm.textField(MainUI + r"|x_scale_value", edit=True, text=2.0)
-y_scale_value = pm.textField(MainUI + r"|y_scale_value", edit=True, text=2.0)
-z_scale_value = pm.textField(MainUI + r"|z_scale_value", edit=True, text=2.0)
+x_scale_value = pm.textField(MainUI + r"|x_scale_value", edit=True, text=1.0)
+y_scale_value = pm.textField(MainUI + r"|y_scale_value", edit=True, text=1.0)
+z_scale_value = pm.textField(MainUI + r"|z_scale_value", edit=True, text=1.0)
 x_filter_value = pm.textField(MainUI + r"|x_filter_value", edit=True, text=0.2)
 y_filter_value = pm.textField(MainUI + r"|y_filter_value", edit=True, text=0.2)
 z_filter_value = pm.textField(MainUI + r"|z_filter_value", edit=True, text=0.2)
