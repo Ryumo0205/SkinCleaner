@@ -217,27 +217,8 @@ def run(scale_value=list, filter_value=list):
 
 
 
-#pm.cmdFileOutput(closeAll=True)
+
 if __name__ == "__main__":
     print("please use GUI")
 else:
     pass
-
-# getlist = run()
-# for iq in getlist:
-#     print(iq[0])
-#     if iq[1] == None :
-#         pass
-#     else:
-#         print(iq)
-
-
-
-#
-# if fix_vtx ==  None:
-#     pm.warning("IQRscale must 1.0 ~ 2.0 .")
-# else:
-#     pass
-#     pm.select(fix_vtx)
-
-#pm.showWindow(UI_fn.MainUI)

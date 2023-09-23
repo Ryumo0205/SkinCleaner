@@ -4,7 +4,7 @@ import pymel.core as pm
 
 
 import SkinChecker.main
-reload(SkinChecker.main)
+# reload(SkinChecker.main)
 
 print(os.path.abspath(os.getcwd()))
 ui_file_path = pm.internalVar(usd=True) + r"SkinChecker/SkinChecker.ui"
